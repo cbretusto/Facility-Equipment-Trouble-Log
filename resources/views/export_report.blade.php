@@ -92,7 +92,7 @@
                 let equipmentModel = $('#slctSearchFETLEquipmentModel').val();
                 let from = $('#txtSearchFrom').val();
                 let to = $('#txtSearchTo').val();
-                
+
                 if(equipment == null){
                     console.log('equipment',equipment)
                     alert('Select Equipment');
@@ -103,17 +103,18 @@
                     console.log('to',to)
                     alert('Select Date To');
                 }else{
-                    let encode_equipment = equipment.replace('/','||')
-                    let url_encode_equipment = encodeURIComponent(encode_equipment);
+                    let encodeEquipment = equipment.replace('/','||')
+                    let urlEncodeEquipment = encodeURIComponent(encodeEquipment);
+                    let urlEncodeEquipmentmodel;
 
                     if(equipmentModel != null){
-                        let encode_equipment_model = equipmentModel.replace('/','||')
-                        let url_encode_equipment_model = encodeURIComponent(encode_equipment_model);
+                        let encodeEquipmentModel = equipmentModel.replace('/','||')
+                        urlEncodeEquipmentmodel = encodeURIComponent(encodeEquipmentModel);
                     }else{
-                        url_encode_equipment_model = 'null';
+                        urlEncodeEquipmentmodel = 'null';
                     }
 
-                    window.location.href = `export/${url_encode_equipment}/${url_encode_equipment_model}/${from}/${to}`;
+                    window.location.href = `export/${urlEncodeEquipment}/${urlEncodeEquipmentmodel}/${from}/${to}`;
                     console.log('export')
                     $('.alert').remove();
                 }

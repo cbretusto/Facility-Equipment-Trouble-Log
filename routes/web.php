@@ -41,12 +41,6 @@ Route::get('/export_report', function () {
 })->name('export_report');
 
 
-/**
- * USER CONTROLLER
- * Note: always use snake case naming convention to route & route name then set camel case to the method for best practice
- * Reply: Noted Sir Jannus manyak
-**/
-
 Route::get('/get_user_log', [UserController::class, 'getUserLog'])->name('get_user_log');
 Route::get('/view_users', [UserController::class, 'viewUsers'])->name('view_users');
 Route::get('/get_employee_name', [UserController::class, 'getEmployeeName'])->name('get_employee_name');

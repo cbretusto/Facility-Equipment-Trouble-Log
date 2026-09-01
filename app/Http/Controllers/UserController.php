@@ -60,7 +60,7 @@ class UserController extends Controller
     }
 
     public function getEmployeeName(){
-        $get_employee_name = RapidXUser::where('user_stat', 1)->where('department_id', '30')->orderBy('employee_number', 'DESC')->whereNotNull('employee_number')->get();
+        $get_employee_name = RapidXUser::where('user_stat', 1)->where('department_id', '30')->orderBy('name', 'ASC')->whereNotNull('employee_number')->get();
         return response()->json(['get_employee_name' => $get_employee_name]);
     }
 

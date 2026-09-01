@@ -103,7 +103,7 @@ class EquipmentModelController extends Controller
                 if( count($check_existing_record) != 1){
                     EquipmentModel::where('id', $request->equipment_model_id)->update([
                         'equipment_model'   => $request->equipment_model,
-                        'created_at'        => date('Y-m-d H:i:s'),
+                        'updated_at'        => date('Y-m-d H:i:s'),
                     ]);    
                 }else{
                     return response()->json(['result' => 1]);

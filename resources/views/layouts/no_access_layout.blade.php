@@ -18,8 +18,11 @@
     </head>
     <body class="hold-transition sidebar-mini">
         <div class="wrapper">
+            @include('shared.pages.header')
             @include('shared.pages.nav')
-            <img src="{{ asset('public/images/FETLSv2.jpg') }}" alt="" style="height:100%; width:100%;">
+            @include('shared.pages.footer')
+    {{-- <img src="{{ asset('public/images/FETLSv2.jpg') }}" alt="" style="height:100%; width:100%;"> --}}
+            <img src="{{ asset('public/images/Facility_v2.jpg') }}" alt="" style="height:100%; width:100%;">
         </div>
     </body>
 </html>

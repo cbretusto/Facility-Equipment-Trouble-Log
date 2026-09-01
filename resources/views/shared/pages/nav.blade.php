@@ -1,7 +1,10 @@
 
-<aside class="main-sidebar sidebar-dark-navy elevation-4">
+<aside class="main-sidebar sidebar-dark-navy elevation-4" style="height: 100vh">
 
+    <!-- System title and logo -->
     <a href="{{ route('dashboard') }}" class="brand-link text-center">
+    {{-- <a href="" class="brand-link text-center"> --}}
+        {{-- <img src="{{ asset('public/images/pricon_logo2.png') }}" --}}
         <img src=""
             class="brand-image img-circle elevation-3"
             style="opacity: .8">
@@ -19,7 +22,35 @@
                         <p>Return to RapidX</p>
                     </a>
                 </li>
+
+                <li class="nav-header font-weight-bold mt-4"><i class="fas fa-cogs"></i>&nbsp;FETLS MODULE</li>
+                <li class="nav-item has-treeview">
+                    <a href="{{ url('../RapidX') }}" class="nav-link">
+                        <i class="fa-solid fa-screwdriver-wrench"></i>
+                        <p>Equipment List</p>
+                    </a>
+                </li>
+                <li class="nav-item has-treeview">
+                    <a href="{{ url('../RapidX') }}" class="nav-link">
+                        <i class="fa-solid fa-book-bookmark"></i>
+                        <p>Trouble Logs</p>
+                    </a>
+                </li>
+                <li class="nav-item has-treeview">
+                    <a href="{{ url('../RapidX') }}" class="nav-link">
+                        <i class="fa-solid fa fa-file-excel"></i>
+                        <p>Export Report</p>
+                    </a>
+                </li>
             </ul>
         </nav>
     </div><!-- Sidebar -->
 </aside>
+
+@section('js_content')
+    <script>
+        $(document).ready(function(){    
+        
+        });
+    </script>
+@endsection

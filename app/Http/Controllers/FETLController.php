@@ -19,7 +19,6 @@ use App\Models\Equipment;
 use App\Models\RapidXUser;
 use App\Models\EquipmentModel;
 
-
 class FETLController extends Controller
 {
     public function viewTroubleLogsApproval(Request $request){
@@ -28,17 +27,17 @@ class FETLController extends Controller
 
         switch ($request->category) {
             case '0':
-                $where_in = '1,2';
+                $where_in = [1,2];
                 break;
             case '1':
-                $where_in = '3';
+                $where_in = [3];
                 break;
             case '2':
-                $where_in = '4,5';
+                $where_in = [4,5];
                 break;
             
             default:
-                $where_in = '6';
+                $where_in = [6];
                 break;
         }
 
@@ -50,33 +49,32 @@ class FETLController extends Controller
             'checked_by_info'
         ])
         ->where('logdel', 0)
-        ->whereIn('approval_status', [$where_in])
-        ->orWhere('created_by', $rapidx_user_id)
-        ->orWhere('noted_by', $rapidx_user_id)
-        ->orWhere('checked_by', $rapidx_user_id)
+        ->whereIn('approval_status', $where_in)
         ->orderBy('id', 'DESC')
         ->get();
-
+        // return $where_in;
         return DataTables::of($trouble_logs_details)
         ->addColumn('action', function($trouble_logs_detail) use($rapidx_user_id){
             $result = '<center>';
             $result .= '<button type="button" class="btn btn-info btn-xs actionViewFETL mb-2 mr-2" FETL-id="' . $trouble_logs_detail->id . '" data-bs-toggle="modal" data-bs-target="#modalFETL" title="View Trouble Logs"><i class="fa fa-xl fa-eye"></i></button><br>';
-                if($trouble_logs_detail->created_by == $rapidx_user_id){
-                    if($trouble_logs_detail->status == 1){
-                        $result .= '<button type="button" class="btn btn-dark btn-xs actionEditFETL mb-2 mr-2" FETL-id="' . $trouble_logs_detail->id . '" data-bs-toggle="modal" data-bs-target="#modalFETL" title="Edit Trouble Logs"><i class="fa fa-xl fa-edit"></i></button><br>';
-                        $result .= '<button type="button" class="btn btn-danger btn-xs actionChangeFETLStatus mb-2 mr-2" FETL-id="' . $trouble_logs_detail->id . '" status="2" data-bs-toggle="modal" data-bs-target="#modalChangeFETLStatus" title="Deactivate Trouble Logs"><i class="fa-solid fa-xl fa-ban"></i></button><br>';
-                    }else{
-                        $result .= '<button type="button" class="btn btn-warning btn-xs actionChangeFETLStatus mb-2 mr-2" FETL-id="' . $trouble_logs_detail->id . '" status="1" data-bs-toggle="modal" data-bs-target="#modalChangeFETLStatus" title="Activate Trouble Logs"><i class="fa-solid fa-xl fa-arrow-rotate-right"></i></button><br>';
+                if(!in_array($trouble_logs_detail->approval_status, [3, 6])){
+                    if($trouble_logs_detail->created_by == $rapidx_user_id){
+                        if($trouble_logs_detail->status == 1){
+                            $result .= '<button type="button" class="btn btn-dark btn-xs actionEditFETL mb-2 mr-2" FETL-id="' . $trouble_logs_detail->id . '" data-bs-toggle="modal" data-bs-target="#modalFETL" title="Edit Trouble Logs"><i class="fa fa-xl fa-edit"></i></button><br>';
+                            $result .= '<button type="button" class="btn btn-danger btn-xs actionChangeFETLStatus mb-2 mr-2" FETL-id="' . $trouble_logs_detail->id . '" status="2" data-bs-toggle="modal" data-bs-target="#modalChangeFETLStatus" title="Deactivate Trouble Logs"><i class="fa-solid fa-xl fa-ban"></i></button><br>';
+                        }else{
+                            $result .= '<button type="button" class="btn btn-warning btn-xs actionChangeFETLStatus mb-2 mr-2" FETL-id="' . $trouble_logs_detail->id . '" status="1" data-bs-toggle="modal" data-bs-target="#modalChangeFETLStatus" title="Activate Trouble Logs"><i class="fa-solid fa-xl fa-arrow-rotate-right"></i></button><br>';
+                        }
                     }
-                }
-    
+                }    
+
                 if($trouble_logs_detail->noted_by == $rapidx_user_id){
                     if($trouble_logs_detail->approval_status == 1){
                         $result .= '<button type="button" class="btn btn-success btn-xs actionChangeFETLApproval mb-2 mr-2" FETL-id="' . $trouble_logs_detail->id . '" status="2"  data-bs-toggle="modal" data-bs-target="#modalChangeFETLApproval" title="Approve"><i class="fa fa-xl fa-thumbs-up"></i></button>';
                         $result .= '<button type="button" class="btn btn-danger btn-xs actionChangeFETLApproval mb-2 mr-2" FETL-id="' . $trouble_logs_detail->id . '" status="4" data-bs-toggle="modal" data-bs-target="#modalChangeFETLApproval" title="Disaprove"><i class="fa fa-xl fa-thumbs-down"></i></button>';
                     }
                 }
-    
+
                 if($trouble_logs_detail->checked_by == $rapidx_user_id){
                     if($trouble_logs_detail->approval_status == 2){
                         $result .= '<button type="button" class="btn btn-success btn-xs actionChangeFETLApproval mb-2 mr-2" FETL-id="' . $trouble_logs_detail->id . '" status="3" data-bs-toggle="modal" data-bs-target="#modalChangeFETLApproval" title="Approve"><i class="fa fa-xl fa-thumbs-up"></i></button>';
@@ -101,12 +99,12 @@ class FETLController extends Controller
             {
                 case 1:{
                     $result .= '<span class="badge badge-warning">Approval of Noted By: <br>'.$trouble_logs_detail->noted_by_info->name .' </span><br>';
-                    $result .= '<span class="badge badge-info">Checked By: <br>'.$trouble_logs_detail->checked_by_info->name .' </span><br>';
+                    // $result .= '<span class="badge badge-info">Checked By: <br>'.$trouble_logs_detail->checked_by_info->name .' </span><br>';
                     break;
                 }
 
                 case 2:{
-                    $result .= '<span class="badge badge-light shadow mb-2">'. $noted_by_time_remark[0] .' <br> Noted By: <br>'. $trouble_logs_detail->noted_by_info->name .'</span><br>';
+                    $result .= '<span class="badge badge-success shadow mb-2">'. $noted_by_time_remark[0] .' <br> Noted By: <br>'. $trouble_logs_detail->noted_by_info->name .'</span><br>';
                     $result .= '<span class="badge badge-warning">Approval of Checked By: <br>'.$trouble_logs_detail->checked_by_info->name .' </span><br>';
                     break;
                 }
@@ -378,9 +376,9 @@ class FETLController extends Controller
             if($validator->passes()){
                 FETL::where('id', $request->fetl_id_for_done_by)
                 ->update([
-                    'done_by'       => $request->fetl_user_for_done_by,
-                    'status'        => '6',
-                    'updated_at'    => date('Y-m-d H:i:s'),
+                    'done_by'           => $request->fetl_user_for_done_by,
+                    'approval_status'   => '6',
+                    'updated_at'        => date('Y-m-d H:i:s'),
                 ]);
                 return response()->json(['hasError' => "0"]);
             }
