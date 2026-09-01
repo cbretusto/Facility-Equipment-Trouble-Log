@@ -35,7 +35,7 @@ class FETLController extends Controller
             case '2':
                 $where_in = [4,5];
                 break;
-            
+
             default:
                 $where_in = [6];
                 break;
@@ -52,7 +52,7 @@ class FETLController extends Controller
         ->whereIn('approval_status', $where_in)
         ->orderBy('id', 'DESC')
         ->get();
-        // return $where_in;
+
         return DataTables::of($trouble_logs_details)
         ->addColumn('action', function($trouble_logs_detail) use($rapidx_user_id){
             $result = '<center>';
@@ -66,7 +66,7 @@ class FETLController extends Controller
                             $result .= '<button type="button" class="btn btn-warning btn-xs actionChangeFETLStatus mb-2 mr-2" FETL-id="' . $trouble_logs_detail->id . '" status="1" data-bs-toggle="modal" data-bs-target="#modalChangeFETLStatus" title="Activate Trouble Logs"><i class="fa-solid fa-xl fa-arrow-rotate-right"></i></button><br>';
                         }
                     }
-                }    
+                }
 
                 if($trouble_logs_detail->noted_by == $rapidx_user_id){
                     if($trouble_logs_detail->approval_status == 1){
@@ -111,7 +111,7 @@ class FETLController extends Controller
 
                 case 3:{
                     $result .= '<span class="badge badge-light shadow mb-2">'. $noted_by_time_remark[0] .' <br> Noted By: <br>'. $trouble_logs_detail->noted_by_info->name .'</span><br>';
-                    $result .= '<span class="badge badge-light shadow mb-2">'. $checked_by_time_remark[0] .' <br> Checked By: <br>'.$trouble_logs_detail->checked_by_info->name .'</span><br>';                    
+                    $result .= '<span class="badge badge-light shadow mb-2">'. $checked_by_time_remark[0] .' <br> Checked By: <br>'.$trouble_logs_detail->checked_by_info->name .'</span><br>';
                     break;
                 }
 
@@ -130,7 +130,7 @@ class FETLController extends Controller
                 default:
                 $result .= '<span class="badge badge-light shadow mb-2">'. $noted_by_time_remark[0] .' <br> Noted By: <br>'. $trouble_logs_detail->noted_by_info->name .'</span><br>';
                 $result .= '<span class="badge badge-light shadow mb-2">'. $checked_by_time_remark[0] .' <br> Checked By: <br>'.$trouble_logs_detail->checked_by_info->name .'</span><br>';
-                
+
                 if($trouble_logs_detail->done_by != null){
                     $updated_at = explode(' ',$trouble_logs_detail->updated_at);
                     $result .= '<span class="badge badge-light shadow mb-2">'. $updated_at[0] .' <br> Done By: <br>'.$trouble_logs_detail->done_by .'</span><br>';
@@ -225,13 +225,13 @@ class FETLController extends Controller
                             'fetls_status'          => $request->FETL_status,
                             'date_parts_replaced'   => $request->FETL_date_parts_replaced,
                             'location_of_equipment' => $request->FETL_location_of_equipment,
-                            'date_of_trouble'       => $request->FETL_date_of_trouble,    
+                            'date_of_trouble'       => $request->FETL_date_of_trouble,
                             'remark'                => $request->FETL_remark,
                             'created_by'            => $get_created_by[0]->id,
                             'noted_by'              => $get_noted_by[0]->id,
                             'checked_by'            => $get_checked_by[0]->id,
                             'created_at'            => date('Y-m-d H:i:s'),
-                        ]);    
+                        ]);
                     }else{
                         return response()->json(['result' => 1]);
                     }
@@ -252,7 +252,7 @@ class FETLController extends Controller
                 Mail::send('mail.FETL_mail', $get_data, function($message) use($send_email_to, $send_email_cc){
                     $message->to($send_email_to)->cc($send_email_cc)->bcc('cbretusto@pricon.ph')->subject('For Approval: Facility Equipment Trouble Logs');
                 });
-                
+
                 DB::commit();
                 return response()->json(['hasError' => 0]);
             } catch (\Exception $e) {
@@ -266,12 +266,12 @@ class FETLController extends Controller
         $FETL_info = FETL::with(['trouble_logs_equipment_info','trouble_logs_equipment_model_info','created_by_info','noted_by_info','checked_by_info'])->where('id', $request->FETLId)->get();
 
         return response()->json([
-            'FETL_info' => $FETL_info, 
+            'FETL_info' => $FETL_info,
         ]);
     }
 
     //============================== CHANGE FETL STATUS ==============================
-    public function changeFETLStatus(Request $request){        
+    public function changeFETLStatus(Request $request){
         date_default_timezone_set('Asia/Manila');
 
         $data = $request->all(); // collect all input fields
@@ -293,9 +293,9 @@ class FETLController extends Controller
             return response()->json(['validation' => "hasError", 'error' => $validator->messages()]);
         }
     }
-    
+
     //============================== CHANGE FETL APPROVAL ==============================
-    public function changeFETLApproval(Request $request){        
+    public function changeFETLApproval(Request $request){
         date_default_timezone_set('Asia/Manila');
 
         $data = $request->all(); // collect all input fields
@@ -304,7 +304,7 @@ class FETLController extends Controller
             'approval_FETL_id' => 'required',
             'approval_status' => 'required',
         ]);
-        
+
         if($request->approval_status == 2 || $request->approval_status == 4){
             $approval_time = 'noted_by_time_remark';
         }else{
@@ -346,7 +346,7 @@ class FETLController extends Controller
                     $subject = 'Disapproved: Facility Equipment Trouble Logs';
                     break;
                 }
-                
+
                 default:
                 $subject = 'Disapproved: Facility Equipment Trouble Logs';
             }
@@ -363,11 +363,11 @@ class FETLController extends Controller
     }
 
         //============================== DONE BY ==============================
-        public function addFETLDoneBy(Request $request){        
+        public function addFETLDoneBy(Request $request){
             date_default_timezone_set('Asia/Manila');
-    
+
             $data = $request->all(); // collect all input fields
-    
+
             $validator = Validator::make($data, [
                 'fetl_id_for_done_by'   => 'required',
                 'fetl_user_for_done_by' => 'required',
